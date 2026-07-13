@@ -1,0 +1,13 @@
+# ~/.zprofile — login shell setup (runs once at login, before .zshrc)
+
+# Homebrew — works on macOS (Apple Silicon + Intel) and Linux
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Local user binaries (pipx, agy, hermes, etc.)
+export PATH="$HOME/.local/bin:$PATH"
