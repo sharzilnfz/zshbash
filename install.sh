@@ -465,6 +465,7 @@ install_dotfiles() {
     "zshenv:.zshenv"
     "zprofile:.zprofile"
     "zshrc:.zshrc"
+    "p10k.zsh:.p10k.zsh"
   )
 
   local any_existing=false
