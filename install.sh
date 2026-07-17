@@ -346,6 +346,8 @@ install_brew_tools() {
     git-lfs      # Git large file storage
     pstree       # Process tree viewer
     mtr          # Network diagnostic tool
+    node         # Node.js runtime
+    pnpm         # Fast npm replacement
   )
 
   for tool in "${tools[@]}"; do
@@ -418,44 +420,6 @@ install_nerd_font() {
   fi
 }
 
-# ── 10. VOLTA (NODE VERSION MANAGER) ─────────────────────────────────────────
-install_volta() {
-  log_step "Volta (Node version manager)"
-
-  if command_exists volta || [[ -d "$HOME/.volta/bin" ]]; then
-    log_skip "Volta"
-    return
-  fi
-
-  log_info "Installing Volta …"
-  curl -fsSL https://get.volta.sh | bash -s -- --skip-setup
-  export VOLTA_HOME="$HOME/.volta"
-  export PATH="$VOLTA_HOME/bin:$PATH"
-  log_ok "Volta installed"
-}
-
-# ── 11. PNPM VIA VOLTA ───────────────────────────────────────────────────────
-install_pnpm() {
-  log_step "pnpm (via Volta)"
-
-  # Reload Volta into current session
-  export VOLTA_HOME="$HOME/.volta"
-  export PATH="$VOLTA_HOME/bin:$PATH"
-
-  if command_exists pnpm; then
-    log_skip "pnpm ($(pnpm --version))"
-    return
-  fi
-
-  if command_exists volta; then
-    log_info "Installing pnpm via Volta …"
-    volta install pnpm
-    log_ok "pnpm installed via Volta"
-  else
-    log_warn "Volta not found in PATH — skipping pnpm install"
-    log_info "After restarting your shell, run: volta install pnpm"
-  fi
-}
 
 # ── 12. DOTFILES ─────────────────────────────────────────────────────────────
 install_dotfiles() {
@@ -513,7 +477,7 @@ print_summary() {
   echo ""
 
   echo -e "${BOLD}Installed / verified:${RESET}"
-  for tool in zsh brew git volta pnpm bat eza fzf ripgrep tmux atuin zoxide; do
+  for tool in zsh brew git node pnpm bat eza fzf ripgrep tmux atuin zoxide; do
     if command_exists "$tool"; then
       echo -e "  ${GREEN}✓${RESET} $tool"
     else
@@ -529,8 +493,7 @@ print_summary() {
   echo -e "     • Terminal.app: Preferences → Profiles → Font"
   echo -e "     • VS Code: set ${BOLD}\"terminal.integrated.fontFamily\": \"MesloLGS NF\"${RESET}"
   echo -e "  ${CYAN}3.${RESET} Run ${BOLD}p10k configure${RESET} to customize your prompt"
-  echo -e "  ${CYAN}4.${RESET} Install Node LTS: ${BOLD}volta install node${RESET}"
-  echo -e "  ${CYAN}5.${RESET} Reload shell config: ${BOLD}source ~/.zshrc${RESET}"
+  echo -e "  ${CYAN}4.${RESET} Reload shell config: ${BOLD}source ~/.zshrc${RESET}"
   echo ""
   echo -e "${CYAN}Dotfiles repo: ${BOLD}$DOTFILES_DIR${RESET}"
   if [[ -d "$BACKUP_DIR" ]]; then
@@ -562,8 +525,6 @@ main() {
   install_brew_tools
   install_postgresql
   install_nerd_font
-  install_volta
-  install_pnpm
   install_dotfiles
 
   print_summary

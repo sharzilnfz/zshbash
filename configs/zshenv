@@ -3,7 +3,3 @@
 
 # Rust toolchain
 [[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
-
-# Volta — Node version manager (set early so it's available everywhere)
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
